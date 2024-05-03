@@ -1,8 +1,11 @@
+import { AuthProperties } from './../../core/properties/auth.propertie';
 import { SendMailerService } from './../../core/services/send-mailer.service';
 import { User } from 'src/core/entities/user.entity';
 import { UserRepository } from './../../core/repositories/user.repository';
 import {
   ConflictException,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -12,6 +15,7 @@ import { SignInDto } from './dto/signin.dto';
 import { RegisterDto } from './dto/register.dto';
 import { generateCodeHelper } from 'src/core/helpers/generate-code.helper';
 import { ConfirmDto } from '../../core/interfaces/confirm.dto';
+import { VerifyDto } from './dto/verify.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +26,7 @@ export class AuthService {
   ) {}
 
   async signIn({ username, password }: SignInDto) {
-    const user = await this.userRepository.getOne(
+    const user = await this.userRepository.getOneByUsername(
       username.toLowerCase().trim(),
     );
 
@@ -77,5 +81,34 @@ export class AuthService {
     await this.sendMailerService.sendConfirmationEmail(userInsert);
 
     return createUser;
+  }
+
+  async verifyAccount({ code, email }: VerifyDto) {
+    const user = await this.userRepository.getOneByEmail(email);
+
+    if (!user.authConfirmToken) {
+      throw new HttpException('Email incorrecto', HttpStatus.BAD_REQUEST);
+    }
+
+    if (user.attempts >= AuthProperties.USER_ATTEMPTS) {
+      throw new HttpException(
+        'Ha excedido el número de intentos',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    await this.userRepository.updateByEmailAndAttempts(
+      user.email,
+      user.attempts + AuthProperties.USER_ATTEMPTS_AGG,
+    );
+
+    if (user.authConfirmToken !== code) {
+      throw new HttpException('Código incorrecto', HttpStatus.UNAUTHORIZED);
+    }
+
+    await this.userRepository.updateByEmail(user.email);
+    await this.sendMailerService.sendConfirmedEmail(user);
+
+    return true;
   }
 }

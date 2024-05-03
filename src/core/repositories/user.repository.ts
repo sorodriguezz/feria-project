@@ -11,8 +11,12 @@ export class UserRepository {
     private readonly userModel: Model<User>,
   ) {}
 
-  async getOne(username: string) {
+  async getOneByUsername(username: string) {
     return await this.userModel.findOne({ username: username });
+  }
+
+  async getOneByEmail(email: string) {
+    return await this.userModel.findOne({ email });
   }
 
   async existUsername(username: string) {
@@ -30,5 +34,26 @@ export class UserRepository {
   async create(createUserDto: CreateUserDto) {
     const createdUser = new this.userModel(createUserDto);
     return createdUser.save();
+  }
+
+  async updateByEmailAndAttempts(email: string, attempts: number) {
+    return await this.userModel.updateOne(
+      { email },
+      {
+        attempts: attempts,
+      },
+    );
+  }
+
+  async updateByEmail(email: string) {
+    return await this.userModel.updateOne(
+      { email },
+      {
+        isVerified: true,
+        authConfirmToken: null,
+        status: true,
+        attempts: null,
+      },
+    );
   }
 }

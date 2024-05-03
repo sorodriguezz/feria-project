@@ -24,13 +24,11 @@ export class SendMailerService {
     }
   }
 
-  async sendConfirmedEmail(register: RegisterDto) {
+  async sendConfirmedEmail({ email, username }: RegisterDto) {
     try {
-      const { email, username } = register;
-
       await this.mailerService.sendMail({
         to: email,
-        subject: 'Bienvenido a esta aplicación de prueba! Email confirmado',
+        subject: 'Email verificado',
         template: 'confirmed',
         context: {
           username,
