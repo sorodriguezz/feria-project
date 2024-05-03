@@ -1,6 +1,5 @@
-import { Post } from '@nestjs/common';
 import { Follower, FollowerSchema } from 'src/core/entities/follower.entity';
-import { PostSchema } from 'src/core/entities/post.entity';
+import { Post, PostSchema } from 'src/core/entities/post.entity';
 import { User, UserSchema } from 'src/core/entities/user.entity';
 import {
   ChatMessage,
