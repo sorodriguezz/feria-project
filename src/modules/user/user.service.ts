@@ -9,7 +9,11 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    createUserDto.password = bcrypt.hashSync(createUserDto.password, 10);
+    const salt = await bcrypt.genSalt();
+    createUserDto.password = bcrypt.hashSync(createUserDto.password, salt);
+    createUserDto.username = createUserDto.username.toLowerCase().trim();
+    createUserDto.email = createUserDto.email.toLowerCase().trim();
+
     return await this.userRepository.create(createUserDto);
   }
 }

@@ -15,23 +15,32 @@ export class User extends Document {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true })
-  profilePicture: string;
+  @Prop({ default: null, nullable: true })
+  profilePicture?: string;
 
-  @Prop({ default: true })
-  status: boolean;
+  @Prop({ default: null, nullable: true })
+  authConfirmToken?: string;
+
+  @Prop({ default: 0, nullable: true })
+  attempts?: number;
+
+  @Prop({ default: false, nullable: true })
+  isVerified?: boolean;
+
+  @Prop({ default: false, nullable: true })
+  status?: boolean;
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }])
-  followers: mongoose.Schema.Types.ObjectId[];
+  followers?: mongoose.Schema.Types.ObjectId[];
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }])
-  following: mongoose.Schema.Types.ObjectId[];
+  following?: mongoose.Schema.Types.ObjectId[];
 
   @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  createdAt?: Date;
 
   @Prop({ type: Date, default: Date.now })
-  updatedAt: Date;
+  updatedAt?: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

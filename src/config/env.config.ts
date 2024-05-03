@@ -11,4 +11,17 @@ export default () => ({
       expiresIn: process.env.TOKEN_EXPIRE,
     },
   },
+  configMailer: {
+    transport: {
+      service: process.env.EMAIL_CREDENTIALS_SERVICE,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_CREDENTIALS_USER,
+        pass: process.env.EMAIL_CREDENTIALS_PASSWORD,
+      },
+    },
+    defaults: {
+      from: process.env.EMAIL_DEFAULT_FROM,
+    },
+  },
 });
