@@ -15,8 +15,11 @@ export class User extends Document {
   @Prop({ required: true })
   password: string;
 
-  @Prop()
-  profile_picture: string;
+  @Prop({ required: true })
+  profilePicture: string;
+
+  @Prop({ default: true })
+  status: boolean;
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }])
   followers: mongoose.Schema.Types.ObjectId[];
@@ -34,7 +37,6 @@ export class User extends Document {
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.pre('save', function (next) {
-  // Actualizar created_at y updated_at antes de guardar el documento
   const now = new Date();
   this.updatedAt = now;
   if (!this.createdAt) {
