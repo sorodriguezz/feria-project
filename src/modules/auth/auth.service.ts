@@ -30,7 +30,11 @@ export class AuthService {
       email.toLowerCase().trim(),
     );
 
-    if (!user.status) {
+    if (!user) {
+      throw new HttpException('Usuario no existe', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!user.status && !user.isVerified) {
       throw new UnauthorizedException();
     }
 
@@ -90,13 +94,17 @@ export class AuthService {
   async verifyAccount({ code, email }: VerifyDto) {
     const user = await this.userRepository.getOneByEmail(email);
 
+    if (!user) {
+      throw new HttpException('Usuario no existe', HttpStatus.BAD_REQUEST);
+    }
+
     if (!user.authConfirmToken) {
       throw new HttpException('Email incorrecto', HttpStatus.BAD_REQUEST);
     }
 
     if (user.attempts >= AuthProperties.USER_ATTEMPTS) {
       throw new HttpException(
-        'Ha excedido el número de intentos',
+        'Excedio el número de intentos',
         HttpStatus.UNAUTHORIZED,
       );
     }
