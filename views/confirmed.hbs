@@ -1,4 +1,33 @@
-<p>¡Hola {{ username }}!,</p>
-<p>Tu cuenta con el email <bold>{{email}}</bold>, ¡Ha sido confirmado!</p>
-
-<p>Si no solicitó este correo electrónico, puede ignorarlo con seguridad.</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 800vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p>¡Hola <strong>{{username}}!</strong></p>
+        <p>Tu cuenta con el email <strong>{{email}}</strong>, ¡Ha sido confirmado!</p>
+        <p>Si no solicitó este correo electrónico, puede ignorarlo con seguridad.</p>
+    </div>
+</body>
+</html>

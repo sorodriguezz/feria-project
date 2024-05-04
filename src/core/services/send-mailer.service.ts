@@ -11,11 +11,11 @@ export class SendMailerService {
     try {
       await this.mailerService.sendMail({
         to: register.email,
-        subject: '¡Bienvenido! Por favor, verifique su email',
+        subject: '¡Bienvenido!',
         template: 'confirm',
         context: {
           email: register.email,
-          fullname: register.username,
+          username: register.username.toUpperCase(),
           code: register.authConfirmToken,
         },
       });
@@ -31,7 +31,7 @@ export class SendMailerService {
         subject: 'Email verificado',
         template: 'confirmed',
         context: {
-          username,
+          username: username.toUpperCase(),
           email,
         },
       });
