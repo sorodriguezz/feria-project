@@ -25,10 +25,14 @@ export class AuthService {
     private readonly sendMailerService: SendMailerService,
   ) {}
 
-  async signIn({ username, password }: SignInDto) {
-    const user = await this.userRepository.getOneByUsername(
-      username.toLowerCase().trim(),
+  async signIn({ email, password }: SignInDto) {
+    const user = await this.userRepository.getOneByEmail(
+      email.toLowerCase().trim(),
     );
+
+    if (!user.status) {
+      throw new UnauthorizedException();
+    }
 
     if (!bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException();
